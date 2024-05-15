@@ -1,6 +1,6 @@
+use chrono::prelude::*;
 use ring::digest::{Context, Digest, SHA256};
 use ring::error::Unspecified;
-use chrono::prelude::*;
 use uuid::Uuid;
 
 fn sha256_digest(data: String) -> Result<Digest, Unspecified> {
@@ -37,16 +37,16 @@ impl Transaction {
 
     fn is_valid(self: &Self) -> bool {
         if self.from_address == "" {
-            return true
+            return true;
         }
         if self.signature == "" {
-            return false
+            return false;
         }
         true
     }
 
     fn create(from_address: String, to_address: String, amount: f64) -> Transaction {
-        Transaction{
+        Transaction {
             from_address,
             to_address,
             amount,
@@ -58,11 +58,7 @@ impl Transaction {
 }
 
 fn main() {
-    let transaction = Transaction::create(
-        String::from("a"),
-        String::from("b"),
-        123.32,
-    );
+    let transaction = Transaction::create(String::from("a"), String::from("b"), 123.32);
     println!("{}", transaction.get_data_string());
     println!("{}", transaction.calculate_hash());
 }
