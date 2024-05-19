@@ -1,6 +1,7 @@
 use chrono::prelude::*;
 use ring::digest::{Context, Digest, SHA256};
 use ring::error::Unspecified;
+use std::fmt::{Display, Formatter};
 use uuid::Uuid;
 
 fn sha256_digest(data: String) -> Result<Digest, Unspecified> {
@@ -19,7 +20,7 @@ struct Transaction {
 }
 
 impl Transaction {
-    fn get_data_string(self: &Self) -> String {
+    fn to_string(self: &Self) -> String {
         format!(
             "{}{}{}{}{}{}",
             self.from_address,
@@ -32,19 +33,18 @@ impl Transaction {
     }
 
     fn calculate_hash(self: &Self) -> String {
-        format!("{:?}", sha256_digest(self.get_data_string()).unwrap())
+        format!("{:?}", sha256_digest(self.to_string()).unwrap())
     }
 
     fn is_valid(self: &Self) -> bool {
-        if self.from_address == "" {
-            return true;
-        }
-        if self.signature == "" {
-            return false;
-        }
-        true
+        let _empty_string = "".to_string();
+        let res = match self {
+            Self { from_address, .. } if *from_address == *_empty_string => true,
+            Self { signature, .. } if *signature == *_empty_string => false,
+            _ => false,
+        };
+        res
     }
-
     fn create(from_address: String, to_address: String, amount: f64) -> Transaction {
         Transaction {
             from_address,
@@ -57,8 +57,15 @@ impl Transaction {
     }
 }
 
+impl Display for Transaction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_string())
+    }
+}
+
 fn main() {
     let transaction = Transaction::create(String::from("a"), String::from("b"), 123.32);
-    println!("{}", transaction.get_data_string());
+    println!("{}", transaction);
     println!("{}", transaction.calculate_hash());
+    println!("{}", transaction.is_valid());
 }
