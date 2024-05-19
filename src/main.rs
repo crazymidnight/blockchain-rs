@@ -38,12 +38,11 @@ impl Transaction {
 
     fn is_valid(self: &Self) -> bool {
         let _empty_string = "".to_string();
-        let res = match self {
+        match self {
             Self { from_address, .. } if *from_address == *_empty_string => true,
             Self { signature, .. } if *signature == *_empty_string => false,
             _ => false,
-        };
-        res
+        }
     }
     fn create(from_address: String, to_address: String, amount: f64) -> Transaction {
         Transaction {
