@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 ring = "0.17.8"
 chrono = "0.4.38"
-uuid = { version = "1.8.0", features = ["v4"] }
+uuid = { version = "1.11.0", features = ["v4"] }
